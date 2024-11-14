@@ -1,0 +1,15 @@
+.page-header h2 {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.page-header {
+    background-image: url('/static/images/logo.jpg');
+    background-size: 200px;
+    background-position: right;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 200px;
+}
+.col-fixed {
+    width:300px;
+}

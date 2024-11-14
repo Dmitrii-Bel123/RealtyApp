@@ -1,0 +1,26 @@
+{% extends "realty/base.html" %}
+{% block content %}
+<h3>Объявление:</h3>
+<div class="col-6">
+    <div class="row border rounded bg-light">
+        <div class="col-8">
+            <h4>Продаю:</h4>
+            <b>{{advert.object.type.title}} по адресу:</b> {{advert.object.address}}<br>
+            <b>Район:</b> {{advert.object.district.title}}
+
+            <p><b>Количество комнат:</b> {{advert.object.rooms}}
+            <p><b>Этаж:</b> {{advert.object.floor}} из {{advert.object.floors}}
+            <p><b>Площадь:</b> {{advert.object.apart_area}} кв.м.
+            <p><b>Описание:</b><br>{{advert.object.description|default_if_none:""}}
+
+            <p><b>Продавец:</b> {{advert.owner.fio}}<br>
+            <b>тел.:</b> {{advert.owner.phone}}
+        </div>
+        <div class="col-4">
+            <h4>Цена:</h4>
+            <p><b>Руб.:</b> {{advert.price|floatformat:-2}}
+            <p><b>USD:</b> {{advert.price_usd|floatformat:-2}}
+        </div>
+    </div>
+</div>
+{% endblock %}

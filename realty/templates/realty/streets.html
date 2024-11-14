@@ -1,0 +1,24 @@
+{% extends "realty/base.html" %}
+{% block content %}
+<div class="col-6">
+    <h4>Редактирование улиц:</h4>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>Название</td>
+            <td align="right">
+                <a href="{% url 'add_street' %}" class="btn btn-outline-success btn-sm">Добавить</a>
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+            {% for street in streets %}
+            <tr>
+                <td>{{street.title}}</td>
+                <td align="right"><a href="{% url 'edit_street' street.id %}" class="btn btn-outline-secondary btn-sm">редактировать</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

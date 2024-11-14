@@ -1,0 +1,96 @@
+{% extends "realty/base.html" %}
+{% block content %}
+<h3>Поиск объявлений</h3>
+<div class="col-fixed bg-light rounded">
+    <h4>Фильтры</h4>
+    <form method="get" action="{% url 'filter' %}">
+        <div class="row mt-2">
+            <div class="col">
+                {{ form_filter.type.errors }}
+                <b>{{ form_filter.type.label_tag }}</b>
+                {{ form_filter.type }}
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                {{ form_filter.district.errors }}
+                <b>{{ form_filter.district.label_tag }}</b>
+                {{ form_filter.district }}
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <b>Количество комнат:</b>
+                <div class="ms-2">
+                    {{ form_filter.rooms }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col">
+                <b>Площадь:</b>
+                <div class="row">
+                    <div class="col fieldWrapper">{{ form_filter.apart_area_from }}</div>
+                    <div class="col fieldWrapper">{{ form_filter.apart_area_to }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <b>Этаж:</b>
+                <div class="row">
+                    <div class="col fieldWrapper">{{ form_filter.floors_from }}</div>
+                    <div class="col fieldWrapper">{{ form_filter.floors_to }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <b>Цена:</b>
+                <div class="row">
+                    <div class="col fieldWrapper">{{ form_filter.price_from }}</div>
+                    <div class="col fieldWrapper">{{ form_filter.price_to }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col text-center">
+                <input type="hidden" name="submit" value="1">
+                <button type="submit" class="btn btn-outline-success">Показать</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="col">
+    <h4 class="mb-2">Средняя цена: {{avg_price|floatformat:-2}} руб.</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Дата создания</th>
+                <th>Район</th>
+                <th>Адрес объекта</th>
+                <th>Кол-во комнат</th>
+                <th>Площадь</th>
+                <th>Этаж</th>
+                <th>Стоимость</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for advert in adverts %}
+            <tr>
+                <td>{{ advert.create_time|date:'d.m.Y H:i' }}</td>
+                <td>{{ advert.object.district.title }}</td>
+                <td>{{ advert.object.address }}</td>
+                <td>{{ advert.object.rooms }}</td>
+                <td>{{ advert.object.apart_area }} м<sup>2</sup></td>
+                <td nowrap>{{ advert.object.floor|default_if_none:1 }} из {{advert.object.floors|default_if_none:1}}</td>
+                <td nowrap>{{ advert.price|floatformat:-2 }} руб.</td>
+                <td><a href="{% url 'show_advert' advert.id %}" class="btn btn-outline-secondary btn-sm">Подробнее</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

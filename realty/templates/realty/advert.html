@@ -1,0 +1,133 @@
+{% extends "realty/base.html" %}
+{% block content %}
+<form method="post" action="{% url 'advert' %}">
+    {% csrf_token %}
+    <h4>Добавить объявление:</h4>
+    <div class="border rounded p-2">
+    <div class="row">
+        <div class="col-3">
+            Данные хозяина
+            <div class="fieldWrapper">
+                {{ form_owner.fio.errors }}
+                {{ form_owner.fio.label_tag }}
+                {{ form_owner.fio }}
+            </div>
+            <div class="fieldWrapper">
+                {{ form_owner.phone.errors }}
+                {{ form_owner.phone.label_tag }}
+                {{ form_owner.phone }}
+            </div>
+        </div>
+        <div class="col-6">
+            Данные объекта
+            <div class="row">
+                <div class="col">
+                    {{ form_object.type.errors }}
+                    {{ form_object.type.label_tag }}
+                    {{ form_object.type }}
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    {{ form_object.district.errors }}
+                    {{ form_object.district.label_tag }}
+                    {{ form_object.district }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_object.street.errors }}
+                    {{ form_object.street.label_tag }}
+                    {{ form_object.street }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_object.building.errors }}
+                    {{ form_object.building.label_tag }}
+                    {{ form_object.building }}
+                </div>
+                <div class="col">
+                    {{ form_object.apartment.errors }}
+                    {{ form_object.apartment.label_tag }}
+                    {{ form_object.apartment }}
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-6">
+                    {{ form_object.rooms.errors }}
+                    {{ form_object.rooms.label_tag }}
+                    {{ form_object.rooms }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_object.apart_area.errors }}
+                    {{ form_object.apart_area.label_tag }}
+                    {{ form_object.apart_area }}
+                </div>
+                <div class="col">
+                    {{ form_object.land_area.errors }}
+                    {{ form_object.land_area.label_tag }}
+                    {{ form_object.land_area }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_object.floor.errors }}
+                    {{ form_object.floor.label_tag }}
+                    {{ form_object.floor }}
+                </div>
+                <div class="col">
+                    {{ form_object.floors.errors }}
+                    {{ form_object.floors.label_tag }}
+                    {{ form_object.floors }}
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    {{ form_object.description.errors }}
+                    {{ form_object.description.label_tag }}<br>
+                    {{ form_object.description }}
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            Стоимость
+            <div class="fieldWrapper">
+                {{ form_advert.price.errors }}
+                {{ form_advert.price.label_tag }}
+                {{ form_advert.price }}
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col text-center">
+           <button type="submit" class="btn btn-outline-success">Добавить</button>
+        </div>
+    </div>
+    </div>
+</form>
+
+<h4>Последние объявления:</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Дата создания</th>
+            <th>ФИО хозяина</th>
+            <th>Адрес объекта</th>
+            <th>Стоимость (руб.)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for advert in adverts %}
+        <tr>
+            <td>{{ advert.create_time|date:'d.m.Y H:i' }}</td>
+            <td>{{ advert.owner.fio }}</td>
+            <td>{{ advert.object.address }}</td>
+            <td>{{ advert.price|floatformat:-2 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

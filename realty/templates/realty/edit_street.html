@@ -1,0 +1,14 @@
+{% extends "realty/base.html" %}
+{% block content %}
+<div class="col-4">
+    <a href="{% url 'streets' %}" class="btn btn-sm btn-outline-success">Назад</a>
+    <p><form method="post" action="{% url 'edit_street' street_id %}">
+        {% csrf_token %}
+        <p>Редактировать улицу:
+        <div class="fieldWrapper">
+            {{ form.as_p }}
+        </div>
+        <button class="btn btn-outline-success" type="submit">Изменить</button>
+    </form>
+</div>
+{% endblock %}
