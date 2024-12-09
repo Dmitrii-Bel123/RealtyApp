@@ -1,3 +1,6 @@
+from ast import Index
+from dataclasses import fields
+
 from django.db import models
 from django.utils import timezone
 
@@ -23,7 +26,7 @@ class TypeObject(models.Model):
     class Meta:
         db_table = 'realty_type_object'
     def __str__(self):
-        return "%s" % (self.title)
+        return "%s" % self.title
 
 
 class Object(models.Model):
@@ -41,6 +44,7 @@ class Object(models.Model):
     class Meta:
         db_table = 'realty_object'
         index_together = ('district', 'street', 'building')
+
 
     def address(self):
         addr = self.street.title
