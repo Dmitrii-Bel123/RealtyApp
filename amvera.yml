@@ -6,6 +6,6 @@ meta:
 build:
   requirementsPath: requirements.txt
 run:
-  command: gunicorn --bind 0.0.0.0:8000 realtysite.wsgi:application
+  command: gunicorn --bind 0.0.0.0:80 realtysite.wsgi:application
   persistenceMount: /data
-  containerPort: 8000
+  containerPort: 80
