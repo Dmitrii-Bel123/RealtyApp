@@ -136,7 +136,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'RealtyApp Project API',
-    'DESCRIPTION': '',
+    'DESCRIPTION': 'Привет',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }

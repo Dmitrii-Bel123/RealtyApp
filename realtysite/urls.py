@@ -30,9 +30,11 @@ urlpatterns = [
     path('add_street', views.add_street, name='add_street'),
     re_path('edit_street/(?P<street_id>\d+)', views.edit_street, name='edit_street'),
     path('filter', views.filter, name='filter'),
-    re_path('show_advert/(?P<advert_id>\d+)', views.show_advert, name='show_advert'),
-    path('admin/', admin.site.urls),
 
+    re_path('show_advert/(?P<advert_id>\d+)', views.show_advert, name='show_advert'),
+
+    path('admin/', admin.site.urls),
+    
     path('api/adverts', api.adverts, name='api_adverts'),
     path('api/schema', SpectacularAPIView.as_view(), name='api_schema'),
     path('api/docs', SpectacularSwaggerView.as_view(url_name='api_schema'), name='api_docs'),
