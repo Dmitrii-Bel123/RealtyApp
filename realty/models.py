@@ -1,6 +1,3 @@
-from ast import Index
-from dataclasses import fields
-
 from django.db import models
 from django.utils import timezone
 

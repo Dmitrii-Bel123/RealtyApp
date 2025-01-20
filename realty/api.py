@@ -9,7 +9,7 @@ from rest_framework import status
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
 
-from .models import Advert
+from .models import Advert, TypeObject, Object, District, Street, Owner
 
 class ApiAdvertSerializer(serializers.Serializer):
     fio = serializers.CharField()
@@ -23,7 +23,7 @@ class ApiAdvertSerializer(serializers.Serializer):
     floors = serializers.IntegerField()
     description = serializers.CharField()
     price = serializers.FloatField()
-    create_time = serializers.DateTimeField()
+    create_time = serializers.DateTimeField(required=False)
 
 
 class ApiAdvertsListSerializer(serializers.Serializer):
@@ -120,3 +120,73 @@ def adverts(request):
     }
     serializer = ApiAdvertsListSerializer(data)
     return Response(serializer.data)
+
+
+@extend_schema(
+    summary="Создание нового объявления",
+    description="Эндпоинт для создания нового объявления",
+    request=ApiAdvertSerializer,
+    responses={
+        status.HTTP_201_CREATED: ApiAdvertSerializer,
+        status.HTTP_400_BAD_REQUEST: ApiValidationSerializer,
+    },
+)
+@api_view(['POST'])
+def create_advert(request):
+    serializer = ApiAdvertSerializer(data=request.data)
+    if serializer.is_valid():
+        validated_data = serializer.validated_data
+
+
+        # Получаем или создаем тип объекта, район и улицу
+        type_obj, _ = TypeObject.objects.get_or_create(title=validated_data['type'])
+        district, _ = District.objects.get_or_create(title=validated_data['district'])
+        street, _ = Street.objects.get_or_create(title=validated_data['address'].split(',')[0])
+
+        # Создаем объект недвижимости (Object)
+        obj_data = {
+            "type": type_obj,
+            "district": district,
+            "street": street,
+            "building": validated_data.get("building"),
+            "apartment": validated_data.get("apartment"),
+            "apart_area": validated_data.get("apart_area"),
+            "rooms": validated_data.get("rooms"),
+            "floor": validated_data.get("floor"),
+            "floors": validated_data.get("floors"),
+            "description": validated_data.get("description"),
+        }
+        advert_object = Object.objects.create(**obj_data)
+
+        # Создаем или получаем владельца (Owner)
+        owner, _ = Owner.objects.get_or_create(
+            fio=validated_data['fio'],
+            phone=validated_data['phone']
+        )
+
+        # Создаем объявление (Advert)
+        advert = Advert.objects.create(
+            owner=owner,
+            object=advert_object,
+            price=validated_data['price']
+        )
+
+        # Возвращаем данные созданного объекта
+        advert_serialized = ApiAdvertSerializer({
+            "fio": advert.owner.fio,
+            "phone": advert.owner.phone,
+            "type": advert.object.type.title,
+            "district": advert.object.district.title,
+            "address": advert.object.address(),
+            "rooms": advert.object.rooms,
+            "apart_area": advert.object.apart_area,
+            "floor": advert.object.floor,
+            "floors": advert.object.floors,
+            "description": advert.object.description,
+            "price": advert.price,
+            "create_time": advert.create_time
+        })
+        return Response(advert_serialized.data, status=status.HTTP_201_CREATED)
+    else:
+        # Если данные невалидны, возвращаем ошибку
+        return Response({'detail': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
